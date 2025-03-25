@@ -1,5 +1,4 @@
 ﻿using System;
-
 using System.Windows.Forms;
 
 namespace GestionClient
@@ -10,16 +9,36 @@ namespace GestionClient
 
         public ClienteIndividual(string nombre, string identificacion, decimal saldo, int cantidadCuentas) : base(nombre, identificacion, saldo)
         {
-            if (cantidadCuentas > 3)
+            try
             {
-                throw new ArgumentException($"El cliente individual '{nombre}' con ID '{identificacion}' no puede tener más de 3 cuentas activas. Se intentó crear con {cantidadCuentas} cuentas.");
+                if (cantidadCuentas > 3)
+                {
+                    throw new ArgumentException($"El cliente individual '{nombre}' con ID '{identificacion}' no puede tener más de 3 cuentas activas. Se intentó crear con {cantidadCuentas} cuentas.");
+                }
+                CantidadCuentasActivas = cantidadCuentas;
             }
-            CantidadCuentasActivas = cantidadCuentas;
+            catch (ArgumentException ex)
+            {
+                MessageBox.Show(ex.Message, "Error de Creación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                throw; 
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error inesperado al crear el cliente individual '{nombre}': {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                throw; 
+            }
         }
 
         public override void MostrarInformacion()
         {
-            MessageBox.Show($"Cliente Individual: {Nombre}, ID: {Identificacion}, Saldo: {Saldo}, Cuentas Activas: {CantidadCuentasActivas}");
+            try
+            {
+                MessageBox.Show($"Cliente Individual: {Nombre}, ID: {Identificacion}, Saldo: {Saldo}, Cuentas Activas: {CantidadCuentasActivas}");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al mostrar la información del cliente individual '{Nombre}': {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
