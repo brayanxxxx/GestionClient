@@ -17,8 +17,8 @@ namespace GestionDeClientes
 
             listClientes = new ListBox() { Top = 10, Left = 10, Width = 400, Height = 150 };
             txtIdentificacion = new TextBox() { Top = 170, Left = 10, Width = 200 };
-            btnAgregarCorporativo = new Button() { Top = 200, Left = 10, Text = "Agregar Corporativo" };
-            btnAgregarIndividual = new Button() { Top = 200, Left = 150, Text = "Agregar Individual" };
+            btnAgregarCorporativo = new Button() { Top = 200, Left = 10, Text = "Corporativo" };
+            btnAgregarIndividual = new Button() { Top = 200, Left = 150, Text = "Individual" };
             btnEliminar = new Button() { Top = 200, Left = 300, Text = "Eliminar Cliente" };
             btnListar = new Button() { Top = 240, Left = 10, Text = "Listar Clientes" };
             btnEditar = new Button() { Top = 240, Left = 150, Text = "Editar Cliente" };
