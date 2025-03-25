@@ -26,7 +26,7 @@ namespace GestionClient
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
             MinimizeBox = false;
-            ClientSize = new System.Drawing.Size(300, 180); // Tamaño base
+            ClientSize = new System.Drawing.Size(300, 180); 
 
             lblNombre = new Label() { Text = "Nombre:", Top = 20, Left = 20, Width = 80 };
             txtNombre = new TextBox() { Top = 20, Left = 110, Width = 150 };
@@ -37,8 +37,8 @@ namespace GestionClient
             lblSaldo = new Label() { Text = "Saldo:", Top = 80, Left = 20, Width = 80 };
             txtSaldo = new TextBox() { Top = 80, Left = 110, Width = 150 };
 
-            btnAceptar = new Button() { Text = "Aceptar", Top = 140, Left = 60, Width = 80 };
-            btnCancelar = new Button() { Text = "Cancelar", Top = 140, Left = 160, Width = 80 };
+            btnAceptar = new Button() { Text = "Aceptar", Top = 120, Left = 60, Width = 80 };
+            btnCancelar = new Button() { Text = "Cancelar", Top = 120, Left = 160, Width = 80 };
 
             btnCancelar.Click += BtnCancelar_Click;
 
@@ -78,6 +78,12 @@ namespace GestionClient
             Close();
         }
 
+        protected void DeshabilitarEdicionId()
+        {
+            txtIdentificacion.ReadOnly = true;
+            txtIdentificacion.BackColor = System.Drawing.SystemColors.ControlLight;
+        }
+
         #region Designer generated code
         private System.ComponentModel.IContainer components = null;
         protected override void Dispose(bool disposing)
@@ -91,9 +97,6 @@ namespace GestionClient
         private void InitializeComponent()
         {
             this.SuspendLayout();
-            //
-            // FormularioNuevoClienteBase
-            //
             this.ClientSize = new System.Drawing.Size(300, 180);
             this.Name = "FormularioNuevoClienteBase";
             this.Text = "Nuevo Cliente";

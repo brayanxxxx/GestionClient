@@ -1,59 +1,108 @@
 ﻿using System;
-
 using System.Windows.Forms;
+using System.Linq;
 
 namespace GestionClient
 {
     public partial class FormularioNuevoClienteIndividual : FormularioNuevoClienteBase
     {
         private Label lblCantidadCuentas;
-        private TextBox txtCantidadCuentas;
-        public int CantidadCuentas { get; private set; }
+        private NumericUpDown nudCantidadCuentas;
 
-        public FormularioNuevoClienteIndividual() : base("Nuevo Cliente Individual")
+        public int CantidadCuentasActivas { get; set; }
+
+        public int CantidadCuentas
         {
-            InitializeIndividualComponents();
+            get => (int)nudCantidadCuentas.Value;
+            set => nudCantidadCuentas.Value = value;
+        }
+
+        private void InicializarControlesIndividual()
+        {
+            lblCantidadCuentas = new Label() { Text = "Cantidad Cuentas:", Top = 110, Left = 20, Width = 100 };
+            nudCantidadCuentas = new NumericUpDown() { Top = 110, Left = 130, Width = 50, Minimum = 0, Maximum = 10 };
+
+            btnAceptar.Top = 150;
+            btnCancelar.Top = 150;
+
+            ClientSize = new System.Drawing.Size(300, 220);
+
+            Controls.Add(lblCantidadCuentas);
+            Controls.Add(nudCantidadCuentas);
+
             btnAceptar.Click += BtnAceptarIndividual_Click;
         }
 
-        private void InitializeIndividualComponents()
+        public FormularioNuevoClienteIndividual() : base("Nuevo Cliente Individual")
         {
-            lblCantidadCuentas = new Label() { Text = "Cant.Cuentas:", Top = 110, Left = 20, Width = 80 };
-            txtCantidadCuentas = new TextBox() { Top = 110, Left = 110, Width = 150 };
-            ClientSize = new System.Drawing.Size(300, 210);
-            Controls.Add(lblCantidadCuentas);
-            Controls.Add(txtCantidadCuentas);
+            InicializarControlesIndividual();
+        }
+
+        public FormularioNuevoClienteIndividual(string titulo) : base(titulo)
+        {
+            InicializarControlesIndividual();
+            lblCantidadCuentas = Controls.OfType<Label>().FirstOrDefault(lbl => lbl.Text == "Cantidad Cuentas:");
+            nudCantidadCuentas = Controls.OfType<NumericUpDown>().FirstOrDefault(nud => nud.Top == 110 && nud.Left == 130);
+            if (lblCantidadCuentas == null || nudCantidadCuentas == null)
+            {
+                throw new InvalidOperationException("Los controles específicos del cliente individual no se inicializaron correctamente.");
+            }
+            nudCantidadCuentas.Enabled = false;
+            btnAceptar.Click += BtnAceptarIndividualEditar_Click;
         }
 
         private void BtnAceptarIndividual_Click(object sender, EventArgs e)
         {
-            if (ValidarCamposBase() && ValidarCamposIndividual())
+            if (ValidarCamposBase())
             {
+                CantidadCuentasActivas = (int)nudCantidadCuentas.Value; 
                 DialogResult = DialogResult.OK;
                 Close();
             }
         }
 
-        private bool ValidarCamposIndividual()
+        private void BtnAceptarIndividualEditar_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtCantidadCuentas.Text))
+            if (ValidarCamposBase())
             {
-                MessageBox.Show("Por favor, ingrese la cantidad de cuentas.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
+                CantidadCuentasActivas = (int)nudCantidadCuentas.Value; 
+                DialogResult = DialogResult.OK;
+                Close();
             }
+        }
 
-            if (!int.TryParse(txtCantidadCuentas.Text, out int cantidadCuentasIngresada) || cantidadCuentasIngresada < 0)
+        public new string Nombre
+        {
+            get => base.Nombre;
+            set => txtNombre.Text = base.Nombre = value;
+        }
+
+        public new string Identificacion
+        {
+            get => base.Identificacion;
+            set => txtIdentificacion.Text = base.Identificacion = value;
+        }
+
+        public new decimal Saldo
+        {
+            get => base.Saldo;
+            set
             {
-                MessageBox.Show("La cantidad de cuentas debe ser un número entero no negativo.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
+                if (decimal.TryParse(value.ToString(), out decimal saldoValue))
+                {
+                    txtSaldo.Text = saldoValue.ToString();
+                    base.Saldo = saldoValue;
+                }
+                else
+                {
+                    MessageBox.Show("El valor proporcionado para el saldo no es válido.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
-            if (cantidadCuentasIngresada > 3)
-            {
-                MessageBox.Show("Un cliente individual no puede tener más de 3 cuentas.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-            CantidadCuentas = cantidadCuentasIngresada;
-            return true;
+        }
+
+        public new void DeshabilitarEdicionId()
+        {
+            base.DeshabilitarEdicionId();
         }
     }
 }
